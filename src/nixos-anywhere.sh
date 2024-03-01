@@ -357,7 +357,7 @@ if [[ ${is_os-n} != "Linux" ]]; then
   abort "This script requires Linux as the operating system, but got $is_os"
 fi
 
-if [[ ${is_kexec-n} == "n" ]] ; then
+if [[ ${is_kexec-n} == "n" ]] && [[ ${is_installer-n} == "n" ]]; then
   if [[ ${is_container-none} != "none" ]]; then
     echo "WARNING: This script does not support running from a '${is_container}' container. kexec will likely not work" >&2
   fi
