@@ -453,11 +453,11 @@ if [[ -n ${nixos_system-} ]]; then
   nix_copy --to "ssh://$ssh_connection?remote-store=local?root=/mnt" "$nixos_system"
 elif [[ ${build_on_remote-n} == "y" ]]; then
   step Building the system closure
+  _ssh $maybe_sudo mkdir -p /mnt/nix
   # We need to do a nix copy first because nix build doesn't have --no-check-sigs
   nix_copy --to "ssh-ng://$ssh_connection?remote-store=local?root=/mnt" "${flake}#nixosConfigurations.\"${flakeAttr}\".config.system.build.toplevel" \
     --derivation --no-check-sigs
   nixos_system=$(
-    $maybe_sudo mkdir -p /mnt/nix
     nix_build "${flake}#nixosConfigurations.\"${flakeAttr}\".config.system.build.toplevel" \
       --eval-store auto --store "ssh-ng://$ssh_connection?ssh-key=$ssh_key_dir/nixos-anywhere&remote-store=local?root=/mnt"
   )
