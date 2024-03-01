@@ -439,7 +439,7 @@ elif [[ ${build_on_remote-n} == "y" ]]; then
 fi
 
 step Formatting hard drive with disko
-ssh_ "nix_build_func=$(declare -f nix_build) ; $maybe_sudo bash -c '$nix_build_func; $disko_script'"
+ssh_ "$maybe_sudo bash -c '$(declare -f nix_build); echo injected; $disko_script'"
 
 if [[ ${stop_after_disko-n} == "y" ]]; then
   # Should we also do this for `--no-reboot`?
