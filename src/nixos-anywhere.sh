@@ -357,7 +357,7 @@ if [[ ${is_os-n} != "Linux" ]]; then
   abort "This script requires Linux as the operating system, but got $is_os"
 fi
 
-if [[ ${is_kexec-n} == "n" ]] && [[ ${is_installer-n} == "n" ]]; then
+if [[ ${is_kexec-n} == "n" ]] ; then
   if [[ ${is_container-none} != "none" ]]; then
     echo "WARNING: This script does not support running from a '${is_container}' container. kexec will likely not work" >&2
   fi
@@ -454,7 +454,7 @@ if [[ -n ${nixos_system-} ]]; then
 elif [[ ${build_on_remote-n} == "y" ]]; then
   step Building the system closure
   # ssh_ $maybe_sudo mkdir -p /mnt/nix/store
-  ssh_ $maybe_sudo nix-store --init
+  # ssh_ $maybe_sudo mkdir -p /mnt/nix ; chown -R /mnt/nix
   # We need to do a nix copy first because nix build doesn't have --no-check-sigs
   nix_copy --to "ssh-ng://$ssh_connection?remote-store=local?root=/mnt" "${flake}#nixosConfigurations.\"${flakeAttr}\".config.system.build.toplevel" \
     --derivation --no-check-sigs
