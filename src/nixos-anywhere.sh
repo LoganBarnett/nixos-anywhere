@@ -432,13 +432,14 @@ elif [[ ${build_on_remote-n} == "y" ]]; then
   nix_copy --to "ssh-ng://$ssh_connection" "${flake}#nixosConfigurations.\"${flakeAttr}\".config.system.build.diskoScript" \
     --derivation --no-check-sigs
   disko_script=$(
-    nix_build "${flake}#nixosConfigurations.\"${flakeAttr}\".config.system.build.diskoScript" \
+    nix_build \
+      "${flake}#nixosConfigurations.\"${flakeAttr}\".config.system.build.diskoScript" \
       --eval-store auto --store "ssh-ng://$ssh_connection?ssh-key=$ssh_key_dir/nixos-anywhere"
   )
 fi
 
 step Formatting hard drive with disko
-ssh_ "$disko_script"
+ssh_ "nix_build_func=$(declare -f nix_build) ; $maybe_sudo bash -c '$nix_build_func; $disko_script'"
 
 if [[ ${stop_after_disko-n} == "y" ]]; then
   # Should we also do this for `--no-reboot`?
